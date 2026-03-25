@@ -90,6 +90,7 @@ async function onFormSubmit(event) {
 
 async function onLoadMore() {
   currentPage += 1;
+  hideLoadMoreButton();
   showLoader();
 
   try {
@@ -108,7 +109,10 @@ async function onLoadMore() {
     }
 
     const totalPages = Math.ceil(totalHits / PER_PAGE);
-    if (currentPage >= totalPages) {
+
+    if (currentPage < totalPages) {
+      showLoadMoreButton();
+    } else {
       hideLoadMoreButton();
       iziToast.info({
         title: 'Info',
@@ -119,6 +123,12 @@ async function onLoadMore() {
     }
   } catch (error) {
     hideLoader();
+
+    const totalPages = Math.ceil(totalHits / PER_PAGE);
+    if (currentPage < totalPages) {
+      showLoadMoreButton();
+    }
+
     iziToast.error({
       title: 'Error',
       message: 'Something went wrong. Please try again later.',
